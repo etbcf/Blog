@@ -1,7 +1,21 @@
 import sqlite3
+from datetime import datetime
 
 import click
 from flask import current_app, g
+
+
+def adapt_datetime(dt):
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def convert_datetime(bytestring):
+    return datetime.strptime(bytestring.decode("utf-8"), "%Y-%m-%d %H:%M:%S")
+
+
+# Registering the converter and adapter
+sqlite3.register_adapter(datetime, adapt_datetime)
+sqlite3.register_converter("timestamp", convert_datetime)
 
 
 def get_db():
